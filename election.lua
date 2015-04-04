@@ -5,7 +5,7 @@ function check()
 	if r.s == rovote.nat then
 		r.s = 100
 		end
-	end
+end
 function calswing()
 	r.s = rnvote - rovote.nat
 	if r.s < 0 then
