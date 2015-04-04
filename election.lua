@@ -1,10 +1,10 @@
 function check()
 	if d.s == dovote.nat then
-		d.s = 100
-		end
+	   d.s = 100
+	end
 	if r.s == rovote.nat then
-		r.s = 100
-		end
+	   r.s = 100
+	end
 end
 function calswing()
 	r.s = rnvote - rovote.nat
