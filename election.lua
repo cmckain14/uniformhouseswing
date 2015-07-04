@@ -61,7 +61,11 @@ function election(i)
 		end
 end
 function winner(i)
-	es = state(i,false)
+	if cheat == true then
+		es = state(i,false)
+	else
+		es = 0
+		end
 	dfv[i] = dfv[i] - es
 	rfv[i] = rfv[i] + es
 	ifv[i] = 100 - dfv[i] - rfv[i]
