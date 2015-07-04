@@ -707,6 +707,15 @@ if gui == true then
 	else
 		file:write("Dem: "..dic.." ("..dgl..")\n")
 		end
+	if is == true then
+		if igl > 0 then
+			file:write("Ind: "..iic.." (+"..igl..")\n")
+		elseif igl == 0 then
+			file:write("Ind: "..iic.." (-"..")\n")
+		else
+			file:write("Ind: "..iic.." ("..igl..")\n")
+			end
+		end
 	file:close()
 	end
 if sbst == true then
