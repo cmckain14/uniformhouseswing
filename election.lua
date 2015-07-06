@@ -80,8 +80,8 @@ function winner(i)
 	elseif rfv[i] > dfv[i] then
 		nresult[i] = "R"
 	elseif dfv[i] == rfv[i] then
-		dfv[i] = dfv[i] - .01
-		rfv[i] = rfv[i] + .01
+		dfv[i] = dfv[i] - .1
+		rfv[i] = rfv[i] + .1
 		nresult[i] = "R"
 		end
 	end
@@ -438,6 +438,10 @@ function state(i,qu)
 			need = true
 			end
 		end
+	if need == true then
+		uuu = uuu + 1 
+		gstate[uuu] = true
+		end
 	if RRR[s] == nil then
 		RRR[s] = 0
 		end
@@ -496,10 +500,24 @@ function results(i)
 	if need == true then
 		print(st..": ")
 		end
+	if gui == true and oresult[i] ~= nresult[i] and gstate[uuu] == true and guibas == true and guiadv ~= true then
+		file2:write(st..": \n")
+		gstate[uuu] = false
+		used = true
+		end
+	if guiadv == true then
+		if need == true then
+			file2:write(st..": \n")
+			used = true
+			end
+		end
 	ii = i - subt
-	if gain or long then
+	if gain or long or guiadv then
 		io.write("  District "..ii..": ")
 		print(fr)
+		if gui == true and guibas == true then
+			file2:write("  District "..ii..": "..fr.."\n")
+			end
 		end
 	if gain or long and res then
 		longresults(i)
@@ -508,10 +526,17 @@ function results(i)
 	gain = false
 	end
 function longresults(i)
-		print("  GOP: "..rfv[i].."%")
-		print("  Dem: "..dfv[i].."%")
+		print("    GOP: "..rfv[i].."%")
+		print("    Dem: "..dfv[i].."%")
 		if ifv[i] ~= nil and ifv[i] > 10 then
-			print("  Ind: "..ifv[i].."%")
+			print("    Ind: "..ifv[i].."%")
+			end
+		if gui == true and guibas == true and guiper == true then
+			file2:write("    GOP: "..rfv[i].."%\n")
+			file2:write("    Dem: "..dfv[i].."%\n")
+			if ifv[i] ~= nil and ifv[i] > 10 then
+				file2:write("    Ind: "..ifv[i].."%\n")
+				end
 			end
 end
 map = require "map"
@@ -525,22 +550,22 @@ if #arg < 2 then
 rnvote = arg[1]
 dnvote = arg[2]
 mapcreate = false
-if arg[3] == "-r" or arg[4] == "-r" or arg[5] == "-r" then
+if arg[3] == "-r" or arg[4] == "-r" or arg[5] == "-r" or arg[6] == "-r" or arg[7] == "-r" then
 	res = true
 	end
-if arg[3] == "-b" or arg[4] == "-b" or arg[5] == "-b" then
+if arg[3] == "-d" or arg[4] == "-d" or arg[5] == "-d" or arg[6] == "-d" or arg[7] == "-d" then
 	sbst = true
 	end
-if arg[3] == "-l" or arg[4] == "-l" or arg[5] == "-l" then
+if arg[3] == "-l" or arg[4] == "-l" or arg[5] == "-l" or arg[6] == "-l" or arg[7] == "-l" then
 	long = true
 	end
-if arg[3] == "-c" or arg[4] == "-c" or arg[5] == "-c" then
+if arg[3] == "-c" or arg[4] == "-c" or arg[5] == "-c" or arg[6] == "-c" or arg[7] == "-c" then
 	cheat = true
 	end
-if arg[3] == "-m" or arg[4] == "-m" or arg[5] == "-m" then
+if arg[3] == "-m" or arg[4] == "-m" or arg[5] == "-m" or arg[6] == "-m" or arg[7] == "-m" then
 	mapcreate = true
 	end
-if arg[3] == "-i" or arg[4] == "-i" or arg[5] == "-i" then
+if arg[3] == "-i" or arg[4] == "-i" or arg[5] == "-i" or arg[6] == "-i" or arg[7] == "-i" then
 	is = true
 	if type(tonumber(arg[4])) == "number" then
 		isn = arg[4]
@@ -548,16 +573,33 @@ if arg[3] == "-i" or arg[4] == "-i" or arg[5] == "-i" then
 		isn = arg[5]
 	elseif type(tonumber(arg[6])) == "number" then
 		isn = arg[6]
+	elseif type(tonumber(arg[7])) == "number" then
+		isn = arg[7]
+	elseif type(tonumber(arg[8])) == "number" then
+		isn = arg[8]
 	else	
 		error("If you're going to use the indy flag, put the indy swing!",439)
 		end
 	isn = isn /2 
 	end
-if arg[3] == "-g" or arg[4] == "-g" or arg[5] == "-g" then
+if arg[3] == "-g" or arg[4] == "-g" or arg[5] == "-g" or arg[6] == "-g" or arg[7] == "-g" then
 	gui = true
+	used = false
 else
 	gui = false
+	used = false
 	end
+if arg[3] == "-b" or arg[4] == "-b" or arg[5] == "-b" or arg[6] == "-b" or arg[7] == "-b" then
+	guibas = true
+	end
+if arg[3] == "-a" or arg[4] == "-a" or arg[5] == "-a" or arg[6] == "-a" or arg[7] == "-a" then
+	guiadv = true
+	end
+if arg[3] == "-p" or arg[4] == "-p" or arg[5] == "-p" or arg[6] == "-p" or arg[7] == "-p" then
+	guiper = true
+	end
+gstate = {}
+uuu = 0
 ric = 0
 dic = 0
 RRR ={}
@@ -644,6 +686,9 @@ r.sn,d.sn = calswing()
 rgl = 0
 dgl = 0
 igl = 0
+if gui == true then
+	file2 = io.open("state.txt", "w")
+	end
 for abc=1,435 do
 	election(abc)
 	results(abc)
@@ -745,6 +790,12 @@ if sbst == true then
 	end
 if gui == false or gui == nil then
 	mapcreate = true
+	end
+if gui == true and file2 ~= nil then
+	if used == false then
+		file2:write("nil")
+		end
+	file2:close()
 	end
 map.print(seatc,mapcreate)
 
