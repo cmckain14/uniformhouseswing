@@ -1,11 +1,11 @@
-function file_check(file_name)
-	local file_found=io.open(file_name, "r")      
-	if file_found==nil then
-		file_found = false
+function filecheck(filename)
+	local filefound=io.open(filename, "r")      
+	if filefound==nil then
+		filefound = false
 	else
-		file_found = true
+		filefound = true
 		end
-	return file_found
+	return filefound
 end
 require( "iuplua" )
 require( "iupluacontrols" )
@@ -44,6 +44,6 @@ if line3 == nil or line3 == "" then
 else 
 	iup.Message("Results",line1.."\n"..line2.."\n"..line3..nnn..sstring)
 	end
-if file_check("map.svg") == true then
+if filecheck("map.svg") == true then
 	os.execute("start map.svg")
 	end
